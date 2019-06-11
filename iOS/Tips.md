@@ -1,13 +1,8 @@
-# tips
 
+[toc]
 
-### 查看真机UDID
-
-
-```objc
-    instruments -s | awk '{print $NF}' | sed -n 3p | awk '{print substr($0,2,length($0)-2)}' | xargs rvictl -s
-```
-### 关于weakSelf 和 strongSelf
+# OC
+## 关于weakSelf 和 strongSelf
 * `weakSelf`: 使用不用细说, 一般是用于防止循环引用.
 * `strongSelf`: 主要作用是考虑在执行block内容的过程中self释放的情况, 使用`strongSelf`会暂时强持有self, 等执行完block中的内容之后再让其释放.
 
@@ -33,33 +28,7 @@
 
 参考文章: [I finally figured out weakSelf and strongSelf](https://dhoerl.wordpress.com/2013/04/23/i-finally-figured-out-weakself-and-strongself/)
 
-
-### 不要滥用单例
-* [避免滥用单例](https://objccn.io/issue-13-2/)
-![](media/15142576158662/15142776381655.jpg)
-
-*通常不同的模块之间是不应该存在耦合的, 如果使用单例: `A模块`访问单例中存储的状态, 在`B模块`修改了该状态, 无形之中使得`A`,`B`之间产生了耦合.*
-![](media/15142576158662/15142783250935.jpg)
-
-
-在objcio里面还讲了一种情况就是一个有用户登录然后还有好友列表的应用，登录之后朋友列表SPFriendListViewController里可以看到朋友的头像，然后作者实现了一个单例SPThumbnailCache来下载和缓存朋友们的头像。由于单例“create once, live forever”的特性，直到登出这个需求的出现之前，在这里都非常适用。登出功能一旦出现，意味着要清理掉所有缓存和更换一个SPThumbnailCache（其实我很好奇为什么作者不干脆写一个清理缓存的接口得了）。而由于dispatch_once的特点，单例没法反复创建，按照文中的意思，可以不使用dispatch_once来创建单例，接着再实现一个teardown方法来将单例置nil，完了再新建单例来满足需求。 
-### 依赖倒置原则
-* `高层模块不应该依赖低层模块，两者都应该依赖其抽象；抽象不应该依赖细节，细节应该依赖抽象。`
-
- [小话设计模式原则之：依赖倒置原则DIP](https://zhuanlan.zhihu.com/p/24175489)
-
-`工厂方法模式`遵循了`依赖倒置原则`.  在上面的链接的例子中, 工厂模式是这么写的:
-![](media/15142576158662/15142999208697.jpg)
-
-![](media/15142576158662/15142999365804.jpg)
-
-**思考**: 是否应该将![](media/15142576158662/15143000693375.jpg)
-这一步像`移动OA`中用的网络层一样封装在`factory`中? 
-理由: 考虑到`依赖注入`, [如何用最简单的方式解释依赖注入？依赖注入是如何实现解耦的?
-](https://www.zhihu.com/question/32108444) . 如果初始化device的地方特别多的话, 使用依赖注入的方式能规避可能发生的改动.(但是这个初始化方法好像也不会依赖外部变量, 所以是不是有必要呢?)
-
-
-## * `swift`支持函数重载, `oc`不支持, `oc`的替代方式是`withXXX`
+##  `swift`支持函数重载, `oc`不支持, `oc`的替代方式是`withXXX`
 
 ## 关于数组的`count`
 
@@ -113,6 +82,53 @@ PrefixHeader.pch
 > 背景: app内的跳转栈是由自己维护的.
 
     点击按钮从A界面跳转到B界面, 同时执行一次网络请求, 请求回调中会dismiss B界面. 如果用户在执行网络请求的过程中返回至A界面. 此时B控制器已经dismiss一次了, 如果用__strong修饰的话会多执行了一次dismiss. 
+
+
+# UI
+## 确认UITableView reloadData结束
+[https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata](https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata)
+
+
+-------
+
+# 设计模式
+## 不要滥用单例
+* [避免滥用单例](https://objccn.io/issue-13-2/)
+![](media/15142576158662/15142776381655.jpg)
+
+*通常不同的模块之间是不应该存在耦合的, 如果使用单例: `A模块`访问单例中存储的状态, 在`B模块`修改了该状态, 无形之中使得`A`,`B`之间产生了耦合.*
+![](media/15142576158662/15142783250935.jpg)
+
+
+在objcio里面还讲了一种情况就是一个有用户登录然后还有好友列表的应用，登录之后朋友列表SPFriendListViewController里可以看到朋友的头像，然后作者实现了一个单例SPThumbnailCache来下载和缓存朋友们的头像。由于单例“create once, live forever”的特性，直到登出这个需求的出现之前，在这里都非常适用。登出功能一旦出现，意味着要清理掉所有缓存和更换一个SPThumbnailCache（其实我很好奇为什么作者不干脆写一个清理缓存的接口得了）。而由于dispatch_once的特点，单例没法反复创建，按照文中的意思，可以不使用dispatch_once来创建单例，接着再实现一个teardown方法来将单例置nil，完了再新建单例来满足需求。 
+
+## 依赖倒置原则
+* `高层模块不应该依赖低层模块，两者都应该依赖其抽象；抽象不应该依赖细节，细节应该依赖抽象。`
+
+ [小话设计模式原则之：依赖倒置原则DIP](https://zhuanlan.zhihu.com/p/24175489)
+
+`工厂方法模式`遵循了`依赖倒置原则`.  在上面的链接的例子中, 工厂模式是这么写的:
+![](media/15142576158662/15142999208697.jpg)
+
+![](media/15142576158662/15142999365804.jpg)
+
+**思考**: 是否应该将![](media/15142576158662/15143000693375.jpg)
+这一步像`移动OA`中用的网络层一样封装在`factory`中? 
+理由: 考虑到`依赖注入`, [如何用最简单的方式解释依赖注入？依赖注入是如何实现解耦的?
+](https://www.zhihu.com/question/32108444) . 如果初始化device的地方特别多的话, 使用依赖注入的方式能规避可能发生的改动.(但是这个初始化方法好像也不会依赖外部变量, 所以是不是有必要呢?)
+
+
+-------
+
+
+# 其他
+## 查看真机UDID
+
+```objc
+    instruments -s | awk '{print $NF}' | sed -n 3p | awk '{print substr($0,2,length($0)-2)}' | xargs rvictl -s
+```
+
+
 
 ## 大文件处理
 
