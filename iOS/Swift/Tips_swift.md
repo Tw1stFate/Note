@@ -1,4 +1,4 @@
-## @autoclosure
+# @autoclosure
 实现`||`操作:
 
 * `||`操作符: 左边值为真时返回真, 无需计算表达式右侧的值(当右侧需要较复杂的计算操作的时候)
@@ -13,4 +13,6 @@ func ||(left: Bool, right: @autoclosure () -> Bool) -> Bool {
     }
 }
 ```
+
+# [Capturing Self with Swift 4.2](https://benscheirman.com/2018/09/capturing-self-with-swift-4-2/)
 
