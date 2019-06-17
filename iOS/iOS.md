@@ -2,6 +2,17 @@
 
 # 数据结构及算法
 
+# 程序设计
+## OC中为什么要有`Meta Class`
+* OC的面向对象是基于类来设计的, 每个对象都是类的实例. 对象有个`isa`指针指向类对象, 类包含描述该对象的相关数据和行为信息. 对象的属性列表和方法列表存储在类中, 用来对该对象收到的消息进行相应. 当给对象发消息时, `objc_msgSend()`检查该对象的类的方法列表中是否有该方法, 并作出相应. 
+* 每个类自身也是一个对象, 也有一个`isa`指针和其他相关数据和可供相应的方法. 当你调用"class method", 你实际上是发送一条消息给类对象. 
+* 由于类也是一个对象, 所以类对象也是其他类的实例. 因此需要`meta class`来描述类对象, 以及相应类对象收到的消息. 所以类对象的方法列表存储在元类中.
+
+**参考:**
+[Classes and metaclasses](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
+[What is a meta-class in Objective-C?](http://www.cocoawithlove.com/2010/01/what-is-meta-class-in-objective-c.html)
+[简书What is a meta-class in Objective-C?](https://www.jianshu.com/p/ea7c42e16da8)
+
 # 架构模式
 <!--TODO: 架构图-->
 
