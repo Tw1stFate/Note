@@ -1,6 +1,39 @@
 # 2018. 2. 22
 
 ## [JavaScript 运行原理解析](https://juejin.im/post/5a5d64fbf265da3e243b831f)
+
+## JS中的prototype
+> `JS`支持面向对象编程, 但是又没有`Class`的概念, 所以通过`prototype`来实现继承.
+
+先看构造函数: 除了直接用{ ... }创建一个对象外，JavaScript还可以用一种构造函数的方法来创建对象.
+
+```js
+function Student(name) {
+    this.name = name;
+    this.hello = function () {
+        alert('Hello, ' + this.name + '!');
+    }
+}
+var xiaoming = new Student('小明');
+xiaoming.name; // '小明'
+xiaoming.hello(); // Hello, 小明!
+```
+
+如果不写new，这就是一个普通函数，它返回undefined。但是，如果写了new，它就变成了一个构造函数，它绑定的this指向新创建的对象，并默认返回this，也就是说，不需要在构造函数最后写return this.
+
+首先构造函数Student有个`prototype`属性, 指向原型对象, 原型对象有个`constructor`属性指向构造函数. 实例xiaoming有个内部属性`[[Prototype]]`指向原型对象. 
+xiaoming的原型链:
+`xiaoming ----> Student.prototype ----> Object.prototype ----> null`
+
+如果创建多个实例, 所有的实例共享prototype对象(原型对象). 所有实例共享的属性和方法都存放在原型对象中.
+
+**关于`prototype`和`__proto__`:**
+
+* 对于所有的对象，都有`__proto__`属性，这个属性对应该对象的原型
+* 对于函数对象，除了`__proto__`属性之外，还有`prototype`属性，当一个函数被用作构造函数来创建实例时，该函数的prototype属性值将被作为原型赋值给所有对象实例(也就是设置实例的__proto__属性).
+![$\sum_{n=1}^{100}n$](../res/js_prototype.png)
+![](./res/js_prototype.png)
+
 ## String
 
 ### 字符串格式化:
