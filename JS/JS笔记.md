@@ -1,4 +1,6 @@
 # 2018. 2. 22
+
+## [JavaScript 运行原理解析](https://juejin.im/post/5a5d64fbf265da3e243b831f)
 ## String
 
 ### 字符串格式化:
