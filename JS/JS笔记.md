@@ -3,7 +3,7 @@
 ## [JavaScript 运行原理解析](https://juejin.im/post/5a5d64fbf265da3e243b831f)
 
 ## JS中的prototype
-> `JS`支持面向对象编程, 但是又没有`Class`的概念, 所以通过`prototype`来实现继承.
+> `JS`支持面向对象编程, 但是ES6之前没有`Class`的概念(ES6引入了`class`关键字), 所以通过`prototype`来实现继承.
 
 先看构造函数: 除了直接用{ ... }创建一个对象外，JavaScript还可以用一种构造函数的方法来创建对象.
 
