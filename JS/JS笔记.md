@@ -31,7 +31,6 @@ xiaoming的原型链:
 
 * 对于所有的对象，都有`__proto__`属性，这个属性对应该对象的原型
 * 对于函数对象，除了`__proto__`属性之外，还有`prototype`属性，当一个函数被用作构造函数来创建实例时，该函数的prototype属性值将被作为原型赋值给所有对象实例(也就是设置实例的__proto__属性).
-![$\sum_{n=1}^{100}n$](../res/js_prototype.png)
 ![](./res/js_prototype.png)
 
 ## String
