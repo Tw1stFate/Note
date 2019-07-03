@@ -37,6 +37,18 @@ xiaoming的原型链:
 JavaScript没有特定的构造函数。我们所能做的就是使用 new运算符将函数调用转换为构造函数调用，如上面所示。
 构造函数被调用时，会创建一个新对象并将其设置为函数的 `this`参数。构造函数会隐式的返回这个对象，除非我们明确的返回了另外一个对象。
 
+函数对象的定义是：具有[[call]]私有字段的对象.
+构造器对象的定义是：具有私有字段[[construct]]的对象。
+
+我们可以这样说，任何对象只需要实现[[call]]，它就是一个函数对象，可以去作为函数被调用。而如果它能实现[[construct]]，它就是一个构造器对象，可以作为构造器被调用。对于用户使用 function 语法或者Function构造器创建的对象来说，[[call]]和[[construct]]行为总是相似的，它们执行同一段代码。大致可以认为，它们[[construct]]的执行过程如下：
+
+* 以 Object.protoype 为原型创建一个新对象；
+* 以新对象为 this，执行函数的[[call]]；
+* 如果[[call]]的返回值是对象，那么，返回这个对象，否则返回第一步创建的新对象。
+
+
+
+
 参考: [[译] JavaScript中的“this”是什么？](https://juejin.im/post/5b6676e6f265da0fa00a3a12)
 
 
@@ -93,20 +105,212 @@ JavaScript没有特定的构造函数。我们所能做的就是使用 new运算
 
 
 ## 闭包
-* 返回函数会延迟执行.
-* 封装私有变量.
-* 把多参数的函数变成单参数的函数
+参考: [MDN web docs - 闭包](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures)
+### 介绍
+闭包是`函数`和声明该函数的`词法环境`的组合.
+每个闭包都有它自己的词法环境.
 
-### 延迟执行
+```js
+var makeCounter = function() {
+  var privateCounter = 0;
+  function changeBy(val) {
+    privateCounter += val;
+  }
+  return {
+    increment: function() {
+      changeBy(1);
+    },
+    decrement: function() {
+      changeBy(-1);
+    },
+    value: function() {
+      return privateCounter;
+    }
+  }  
+};
+
+var Counter1 = makeCounter();
+var Counter2 = makeCounter();
+console.log(Counter1.value()); /* logs 0 */
+Counter1.increment();
+Counter1.increment();
+console.log(Counter1.value()); /* logs 2 */
+Counter1.decrement();
+console.log(Counter1.value()); /* logs 1 */
+console.log(Counter2.value()); /* logs 0 */  //每个闭包都是引用自己词法作用域内的变量 privateCounter, 互不影响.
+```
+
+**需要注意的是: 闭包词法作用域中捕获的变量, 是在闭包(函数)执行时才被确定的.**
+
+```js
+<p id="help">Helpful notes will appear here</p>
+<p>E-mail: <input type="text" id="email" name="email"></p>
+<p>Name: <input type="text" id="name" name="name"></p>
+<p>Age: <input type="text" id="age" name="age"></p>
+
+function showHelp(help) {
+  document.getElementById('help').innerHTML = help;
+}
+
+function setupHelp() {
+  var helpText = [
+      {'id': 'email', 'help': 'Your e-mail address'},
+      {'id': 'name', 'help': 'Your full name'},
+      {'id': 'age', 'help': 'Your age (you must be over 16)'}
+    ];
+
+  for (var i = 0; i < helpText.length; i++) {
+    var item = helpText[i];
+    document.getElementById(item.id).onfocus = function() {
+      showHelp(item.help);
+    }
+  }
+}
+
+setupHelp();
+```
+这三个闭包在循环中被创建，但他们共享了同一个词法作用域，在这个作用域中存在一个变量item。当onfocus的回调执行时，item.help的值被决定。由于循环在事件触发之前早已执行完毕，变量对象item（被三个闭包所共享）已经指向了helpText的最后一项。
+
+解决这个问题的一种方案:
+
+1. 使用更多的闭包, 可用函数工厂：
+
+```js
+function showHelp(help) {
+  document.getElementById('help').innerHTML = help;
+}
+
+function makeHelpCallback(help) {
+  return function() {
+    showHelp(help);
+  };
+}
+
+function setupHelp() {
+  var helpText = [
+      {'id': 'email', 'help': 'Your e-mail address'},
+      {'id': 'name', 'help': 'Your full name'},
+      {'id': 'age', 'help': 'Your age (you must be over 16)'}
+    ];
+
+  for (var i = 0; i < helpText.length; i++) {
+    var item = helpText[i];
+    document.getElementById(item.id).onfocus = makeHelpCallback(item.help); //调用makeHelpCallback 函数为每一个回调创建一个新的词法环境.
+  }
+}
+
+setupHelp();
+```
+
+2. 使用匿名闭包, 马上把当前循环项的item与事件回调相关联起来.
+
+```
+function showHelp(help) {
+  document.getElementById('help').innerHTML = help;
+}
+
+function setupHelp() {
+  var helpText = [
+      {'id': 'email', 'help': 'Your e-mail address'},
+      {'id': 'name', 'help': 'Your full name'},
+      {'id': 'age', 'help': 'Your age (you must be over 16)'}
+    ];
+
+  for (var i = 0; i < helpText.length; i++) {
+    (function() {
+       var item = helpText[i];
+       document.getElementById(item.id).onfocus = function() {
+         showHelp(item.help);
+       }
+    })(); // 马上把当前循环项的item与事件回调相关联起来
+  }
+}
+
+setupHelp();
+```
+
+3. 使用`let`关键字. 使用let而不是var，因此每个闭包都绑定了块作用域的变量，这意味着不再需要额外的闭包。
+
+```
+function showHelp(help) {
+  document.getElementById('help').innerHTML = help;
+}
+
+function setupHelp() {
+  var helpText = [
+      {'id': 'email', 'help': 'Your e-mail address'},
+      {'id': 'name', 'help': 'Your full name'},
+      {'id': 'age', 'help': 'Your age (you must be over 16)'}
+    ];
+
+  for (var i = 0; i < helpText.length; i++) {
+    let item = helpText[i];
+    document.getElementById(item.id).onfocus = function() {
+      showHelp(item.help);
+    }
+  }
+}
+
+setupHelp();
+```
+
+### 一般作用
+* 延迟执行
 ![](media/15192659033803/15192886369630.jpg)
 
 **返回闭包时牢记的一点就是：返回函数不要引用任何循环变量，或者后续会发生变化的变量.**
 ![](media/15192659033803/15192896993808.jpg)
 
-### 封装私有变量:
+*  封装私有变量:
 ![](media/15192659033803/15192899551398.jpg)
 
-### 把多参数的函数变成单参数的函数. (好像没卵用吧???)
+*  把多参数的函数变成单参数的函数. 
+
+### 闭包性能考量
+如果不是某些特定任务需要使用闭包，在其它函数中创建函数是不明智的，因为闭包在处理速度和内存消耗方面对脚本性能具有负面影响. 
+
+例如，在创建新的对象或者类时，方法通常应该关联于对象的原型，而不是定义到对象的构造器中。原因是这将导致每次构造器被调用时，方法都会被重新赋值一次（也就是，每个对象的创建）。
+
+考虑以下示例：
+
+```
+function MyObject(name, message) {
+  this.name = name.toString();
+  this.message = message.toString();
+  this.getName = function() {
+    return this.name;
+  };
+
+  this.getMessage = function() {
+    return this.message;
+  };
+}
+```
+在上面的代码中，我们并没有利用到闭包的好处，因此可以避免使用闭包。修改成如下：
+
+```
+function MyObject(name, message) {
+  this.name = name.toString();
+  this.message = message.toString();
+}
+MyObject.prototype.getName = function() {
+  return this.name;
+};
+MyObject.prototype.getMessage = function() {
+  return this.message;
+};
+
+// 不建议下面这种重新定义原型的写法:
+MyObject.prototype = {
+  getName: function() {
+    return this.name;
+  },
+  getMessage: function() {
+    return this.message;
+  }
+};
+```
+
 
 ## 箭头函数
 * 箭头函数相当于匿名函数，并且简化了函数定义。箭头函数有两种格式，一种像下面的，只包含一个表达式，连{ ... }和return都省略掉了。还有一种可以包含多条语句，这时候就不能省略{ ... }和return：
