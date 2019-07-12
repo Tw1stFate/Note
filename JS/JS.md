@@ -384,5 +384,29 @@ obj.getAge(); // 25
 * `typeof`：经常用来检测一个变量是不是最基本的数据类型.
 * `instanceof`：用来判断某个构造函数的 prototype 属性所指向的对象是否存在于另外一个要检测对象的原型链上. 简单说就是判断一个引用类型的变量具体是不是某种类型的对象.
 
+### 函数传值
+ECMAScript中所有函数的参数都是按**值**来传递的.  对象参数的传递, 传递的是保存对象所在地址的变量(值为对象在堆中的地址). 而不是对象本身. 这点跟oc一样.
 
+![](./res/js_functionParam.png)
+
+```
+var obj1 = {
+  value:'111'
+};
+ 
+var obj2 = {
+  value:'222'
+};
+ 
+function changeStuff(obj){  
+  obj.value = '333';    //可以修改obj.value的值
+  obj = obj2;   //这句直接将obj变量所装的地址修改为了obj2中装的地址
+  return obj.value;
+}
+
+var foo = changeStuff(obj1);    
+```
+
+## export default
+[export default 命令](http://es6.ruanyifeng.com/?search=import&x=0&y=0#docs/module#export-default-%E5%91%BD%E4%BB%A4)
 

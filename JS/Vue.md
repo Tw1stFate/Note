@@ -28,3 +28,41 @@
 
 * 能用`计算属性`的时候就不要滥用`侦听属性watch`. `watch`可用于检测属性改变时发送网络请求(作为参数)的场景.
 
+# 其他
+## `render: h => h(App) `是什么意思?
+[Explanation for `render: h => h(App)`](https://github.com/vuejs-templates/webpack-simple/issues/29#issuecomment-312902539)
+
+render: h => h(App) 是下面内容的缩写：
+
+```
+render: function (createElement) {
+    return createElement(App);
+}
+```
+
+进一步缩写为(ES6 语法)：
+
+```
+render (createElement) {
+    return createElement(App);
+}
+```
+
+再进一步缩写为：
+
+```
+render (h){
+    return h(App);
+}
+```
+
+按照 ES6 箭头函数的写法，就得到了：
+
+```
+render: h => h(App);
+```
+
+
+
+## 
+
