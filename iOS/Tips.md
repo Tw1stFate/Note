@@ -88,6 +88,17 @@ PrefixHeader.pch
 ## 确认UITableView reloadData结束
 [https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata](https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata)
 
+## 禁用UICollectionView/UITableView更新动画
+
+```
+            [UIView setAnimationsEnabled:NO];
+            [self.orgView performBatchUpdates:^{
+                [self.orgView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            } completion:^(BOOL finished) {
+                [UIView setAnimationsEnabled:YES];
+            }];
+
+```
 
 -------
 
@@ -118,6 +129,9 @@ PrefixHeader.pch
 ](https://www.zhihu.com/question/32108444) . 如果初始化device的地方特别多的话, 使用依赖注入的方式能规避可能发生的改动.(但是这个初始化方法好像也不会依赖外部变量, 所以是不是有必要呢?)
 
 
+
+
+
 -------
 
 
@@ -139,5 +153,7 @@ PrefixHeader.pch
 
 ## WKWebView
 [WKWebViewTips](https://github.com/ShingoFukuyama/WKWebViewTips)
+
+
 
 
