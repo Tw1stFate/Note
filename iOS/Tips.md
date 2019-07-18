@@ -91,13 +91,34 @@ PrefixHeader.pch
 ## 禁用UICollectionView/UITableView更新动画
 
 ```
-            [UIView setAnimationsEnabled:NO];
-            [self.orgView performBatchUpdates:^{
-                [self.orgView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-            } completion:^(BOOL finished) {
-                [UIView setAnimationsEnabled:YES];
-            }];
+// 方式1
+[UIView performWithoutAnimation:^{
 
+    [collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
+}];
+
+// 方式2
+[UIView animateWithDuration:0 animations:^{
+    [collectionView performBatchUpdates:^{
+        [collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
+    } completion:nil];
+}];
+    
+// 方式3
+[UIView setAnimationsEnabled:NO];
+[self.orgView performBatchUpdates:^{
+    [self.orgView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+} completion:^(BOOL finished) {
+    [UIView setAnimationsEnabled:YES];
+}];
+
+// 取消CALayer的动画
+[CATransaction begin];
+[CATransaction setDisableActions:YES];
+
+self.frameLayer.frame = self.frameView.bounds;
+
+[CATransaction commit];
 ```
 
 -------
