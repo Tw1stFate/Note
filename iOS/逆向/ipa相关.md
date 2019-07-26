@@ -1,5 +1,7 @@
 # ipa相关
 
+## [iOS App 签名的原理](https://wereadteam.github.io/2017/03/13/Signature/)
+
 ## 查看ipa的签名信息
 
 1. 改后缀为zip并解压, 得到Payload文件. 
@@ -31,7 +33,9 @@
 	* [dumpdecrypted](https://github.com/stefanesser/dumpdecrypted)
 	* frida-ios-dump [frida cydia源](https://build.frida.re/frida/)
 
+## 实战
 
+	[移动App入侵与逆向破解技术－iOS篇](https://mp.weixin.qq.com/s?__biz=MzA3NTYzODYzMg==&mid=2653577384&idx=1&sn=b44a9c9651bf09c5bea7e0337031c53c&scene=0%23wechat_redirect)
 
 
 
