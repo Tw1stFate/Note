@@ -74,4 +74,3 @@ git commit -m "你的提交说明"
 
 ### 参考
 [git文档](https://git-scm.com/book/zh/v2/)
-[Oh Shit, Git!?!](https://ohshitgit.com/)
