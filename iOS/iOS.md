@@ -206,7 +206,29 @@ XCTFail(format...) //直接Fail的断言
 ## NSUrlProtocol
 
 
+## 配置环境变量
 
+> 一个app一般会分几个不同的环境, 例如SIT, UAT, 生产. 不同环境API地址, app显示的名字等一些信息可能不一样. 需要找到一些较合理的方式进行配置.
+
+* `xcconfig`: 该文件可以动态配置`Build Settings`中的很多参数, 以及plist文件中的值.
+* `scheme`: 通过新建多个`scheme`来达到切换至不同的`scheme`来达到不同的配置.
+* `configurations`: 在scheme中根据不同的action(run/archive)设置不同的configurations.
+
+1. 根据不同的环境(sit/uat/product, 注意由于debug/release存在差异,debug会输出一些调试信息等, 打出的包也会稍大一些), 在`project->info->configurations`中添加不同的`configuration`.
+   2. 新建不同环境下的scheme. 修改scheme, 针对run/archive..设置不同的`configuration`.
+3. 创建不同的环境的`xcconfig`文件, 里面定义需要的变量key和值.
+4. 在project对应的`configurations`中, 针对不同的configuration配置不同的config文件. 
+
+注意: 如果项目有用到cocoapods, 在创建configurations后, 需要pod install, 此外进行第3步操作时, 需要通过`#include "Pods/Target Support Files/Pods/Pods.releasetest.xcconfig"`来引入cocoapods的xcconfig文件.
+
+其他更多:
+* 多个(区分不同环境配置)同名plist文件, 通过Build phases中添加脚本来控制实际情况下那个plist会被打包进app.
+* `Build Settings->Preprocessor Macros`根据不同的环境预先制定不同定义的宏，或者为不同环境下的相同变量定义不同的值.
+* 利用target配置多环境.
+
+参考:
+[手把手教你给一个iOS app配置多个环境变量](https://www.jianshu.com/p/83b6e781eb51)
+[用xcconfig文件配置iOS app环境变量](https://www.jianshu.com/p/9b8bc8351223)
 
 ## 面向对象的缺陷
 **事物往往是一系列特质的组合，而不单单是以一脉相承并逐渐扩展的方式构建的.**
