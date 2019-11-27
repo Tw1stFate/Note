@@ -210,7 +210,7 @@ XCTFail(format...) //直接Fail的断言
 
 > 一个app一般会分几个不同的环境, 例如SIT, UAT, 生产. 不同环境API地址, app显示的名字等一些信息可能不一样. 需要找到一些较合理的方式进行配置.
 
-* `xcconfig`: 该文件可以动态配置`Build Settings`中的很多参数, 以及plist文件中的值.
+* `xcconfig`: 该文件可以动态配置`Build Settings`中的很多参数(参考[xcconfigs](https://github.com/jspahrsummers/xcconfigs)), 以及plist文件中的值.
 * `scheme`: 通过新建多个`scheme`来达到切换至不同的`scheme`来达到不同的配置.
 * `configurations`: 在scheme中根据不同的action(run/archive)设置不同的configurations.
 
@@ -224,6 +224,8 @@ XCTFail(format...) //直接Fail的断言
 其他更多:
 * 多个(区分不同环境配置)同名plist文件, 通过Build phases中添加脚本来控制实际情况下那个plist会被打包进app.
 * `Build Settings->Preprocessor Macros`根据不同的环境预先制定不同定义的宏，或者为不同环境下的相同变量定义不同的值.
+* 当然也可以通过多个不同的plist文件, 通过写代码判断读取哪个plist文件内容.
+* 通过`Preprocessor Macros`搭配单利提供不同环境的各种参数, 单例中写判断逻辑控制不同的输出.
 * 利用target配置多环境.
 
 参考:
