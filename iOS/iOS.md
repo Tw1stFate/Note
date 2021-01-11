@@ -228,7 +228,7 @@ XCTFail(format...) //直接Fail的断言
 
 - `xcconfig`: 该文件可以动态配置`Build Settings`中的很多参数(参考[xcconfigs](https://github.com/jspahrsummers/xcconfigs)), 以及 plist 文件中的值.
 - `scheme`: 通过新建多个`scheme`来达到切换至不同的`scheme`来达到不同的配置.
-- `configurations`: 在 scheme 中根据不同的 action(run/archive)设置不同的 configurations.
+- `configurations`: 一个project可以配置多个configuration，在 scheme 中可以根据不同的 action(run/archive)设置不同的 configurations.
 
 1. 根据不同的环境(sit/uat/product, 注意由于 debug/release 存在差异,debug 会输出一些调试信息等, 打出的包也会稍大一些), 在`project->info->configurations`中添加不同的`configuration`. 2. 新建不同环境下的 scheme. 修改 scheme, 针对 run/archive..设置不同的`configuration`.
 2. 创建不同的环境的`xcconfig`文件, 里面定义需要的变量 key 和值.
