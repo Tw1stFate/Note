@@ -222,9 +222,9 @@ XCTFail(format...) //直接Fail的断言
 
 [Managing different Environments using XCode Build Schemes and Configurations](https://medium.com/flawless-app-stories/managing-different-environments-using-xcode-build-schemes-and-configurations-af7c43f5be19)
 
-> 一个 target 可以对应多个 scheme, 一个 scheme 需要指定某个 configurations 配置(不同的 scheme 可以按照 debug/release 等 configurations, 不同的 configurations 可以配置不同的 bundleIdentifier)
+> 一个 target 可以对应多个 scheme, 一个 scheme 需要指定某个 configurations 配置(不同的 scheme 可以按照 debug/release 等 configurations, 不同的 configurations 可以配置不同的签名信息，bundleId/证书)。如果不同环境有不同的版本号/displayName等，可以针对不同环境建多个target.
 
-> 一个 app 一般会分几个不同的环境, 例如 SIT, UAT, 生产. 不同环境 API 地址, app 显示的名字等一些信息可能不一样. 需要找到一些较合理的方式进行配置.
+> 一个 app 一般会分几个不同的环境, 例如 SIT, UAT, 生产. 不同环境 API 地址, app 显示的名字等一些信息可能不一样. 需要找到一些较合理的方式进行配置. 
 
 - `xcconfig`: 该文件可以动态配置`Build Settings`中的很多参数(参考[xcconfigs](https://github.com/jspahrsummers/xcconfigs)), 以及 plist 文件中的值.
 - `scheme`: 通过新建多个`scheme`来达到切换至不同的`scheme`来达到不同的配置.
