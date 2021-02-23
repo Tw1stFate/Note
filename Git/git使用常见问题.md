@@ -1,3 +1,13 @@
+### 常见错误
+```
+// git push错误
+Git error: RPC failed; curl 56 LibreSSL SSL_read: SSL_ERROR_SYSCALL, errno 54/56
+fatal: The remote end hung up unexpectedly
+```
+`errno 56`: 可能是大文件提交问题, git config http.postBuffer 524288000
+`errno 54`: 改为ssh方式验证提交代码.
+
+
 ### git stash
 
 有时候想要切换分支，但是还不想要提交之前的工作；可以使用 `git stash` 或 `git stash save`, 将新的储藏推送到栈上, 存储修改. 
