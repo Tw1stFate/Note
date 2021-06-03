@@ -63,6 +63,9 @@
 # 第三方库源码阅读
 
 # iOS 逆向
+https://github.com/Naituw/IPAPatch
+https://github.com/AloneMonkey/MonkeyDev
+
 
 # 性能优化
 
@@ -260,3 +263,4 @@ XCTFail(format...) //直接Fail的断言
 ✅ 动态派发安全性
 ✅ 横切关注点
 ❓ 菱形缺陷 (菱形缺陷没有被完全解决，Swift 还不能很好地处理多个协议的冲突，这是 Swift 现在的不足)
+
